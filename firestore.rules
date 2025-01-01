@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Basic functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Allow read/write access to all collections if user is authenticated
+    match /{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Later we can add more specific rules for each collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if request.auth.uid == userId;
+    }
+
+    match /estimatorTemplates/{templateId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    match /projects/{projectId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    match /tasks/{taskId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    match /schedule/{eventId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    match /designs/{designId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    match /aiSettings/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if request.auth.uid == userId;
+    }
+  }
+}
